@@ -1,12 +1,11 @@
 {
 	"files": {
-		"includes": [
-			"**",
-			"!!dist",
-			"!!node_modules",
-			"!!package.json",
-			"!!package-lock.json"
-		],
 		"ignoreUnknown": true
+	},
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true,
+		"defaultBranch": "main"
 	}
 }
