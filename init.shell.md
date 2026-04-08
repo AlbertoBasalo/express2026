@@ -10,3 +10,6 @@ npm run check
 npm run dev
 npm run build
 npm start
+
+npm install -D vitest
+npm test
