@@ -1,3 +1,2 @@
-npm run biome:check
-npm run tsc:check
+npm run check
 npm test
