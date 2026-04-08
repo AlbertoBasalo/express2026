@@ -1,13 +1,13 @@
 {
   "name": "express2026",
   "version": "1.0.0",
-  "description": "",
+  "description": "Boilerplate for a TypeScript backend with Express",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "test": "vitest run",
     "ci:check": "biome ci ",
-    "check": "biome check --fix --unsafe  ",
+    "check": "biome check --fix --unsafe",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "prepare": "husky"
