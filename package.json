@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "test": "vitest run",
-    "check": "biome check --fix --unsafe",
-    "precheck": "tsc --noEmit",
+    "biome:check": "biome check --fix --staged --unsafe",
+    "tsc:check": "tsc --noEmit",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "prepare": "husky"
