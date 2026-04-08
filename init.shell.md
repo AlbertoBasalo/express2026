@@ -12,8 +12,11 @@ npm run build
 npm start
 
 npm install -D vitest
+npm run test:dev
 npm test
 
+// To do; install playwright and add a test for the home route.
+// npm run test:e2e
 
 
 
