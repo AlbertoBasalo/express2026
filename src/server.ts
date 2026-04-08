@@ -1,14 +1,13 @@
-import express, { type Request, type Response } from "express";
+import express from "express";
+import { homeController } from "./routes/home/home.controller.js";
 
 const app = express();
 
-const PORT = 3000;
+export const PORT = 3000;
 
 app.use(express.json());
 
-app.get(`/`, (_req: Request, res: Response) => {
-	res.status(200).send(`Welcome to a TypeScript backend`);
-});
+app.get(`/`, homeController.getHome);
 
 app.listen(PORT, () => {
 	console.log(`Server running at http://localhost:${PORT}`);
