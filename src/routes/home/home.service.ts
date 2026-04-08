@@ -1,5 +1,9 @@
+import { homeRepository } from "./home.repository.js";
+
 export const homeService = {
-	getHome: (): string => {
-		return `Welcome to a TypeScript backend with Express`;
+	getHome: async (): Promise<string> => {
+		const content = await homeRepository.getHome();
+		const { message } = JSON.parse(content);
+		return message;
 	},
 };

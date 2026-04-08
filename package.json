@@ -12,7 +12,7 @@
 		"test:dev": "vitest watch ./src",
 		"test:e2e": "playwright test --project=chromium",
 		"test": "vitest run ./src",
-		"check": "biome check ./src ./tests --fix --unsafe",
+		"check": "biome check ./src ./tests --fix --unsafe && tsc --noEmit",
 		"build": "tsc -p tsconfig.json",
 		"start": "npm run build && node dist/server.js"
 	},
