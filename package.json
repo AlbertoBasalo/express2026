@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "test": "vitest run",
+    "ci:check": "biome ci --files-ignore-unknown=true --json-formatter-enabled=false",
     "check": "biome check --fix --unsafe --no-errors-on-unmatched",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",

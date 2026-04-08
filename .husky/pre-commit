@@ -1,2 +1,2 @@
-npm run check
+npm run ci:check
 npm test
