@@ -29,7 +29,7 @@ For each route domain, keep these files and responsibilities explicit:
   - Should stay thin and deterministic.
 - `*.service.ts`
   - Contains business rules and orchestration.
-  - Depends on repository abstraction/factory, not Express request/response types.
+  - Depends on repository abstraction (classes), not Express request/response types.
 - `*.repository.ts`
   - Encapsulates data access (currently JSON file based for this project).
   - Returns data structures consumed by service logic.
@@ -37,7 +37,7 @@ For each route domain, keep these files and responsibilities explicit:
 ## Implementation Rules
 
 - Must preserve dependency direction: `routes -> validation/controller -> service -> repository`.
-- Must keep local factory-based wiring in the route module (avoid global container changes unless explicitly requested).
+- Must keep local class-based Object-Oriented wiring in the route module via constructor dependency injection (avoid global container changes unless explicitly requested).
 - Must use shared HTTP constants/contracts when returning status/error payloads.
 - Must use `AppError`-compatible behavior for expected failures so middleware can produce standard error responses.
 - Should keep endpoint handlers small and push branching logic into service/validation.

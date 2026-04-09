@@ -63,8 +63,8 @@ const mockRepo = {
   findAll: vi.fn(),
 };
 
-// Inject mocked repository
-const service = new MyService(mockRepo);
+// Inject mocked repository using constructor injection (OOP class pattern)
+const service = new MyService(mockRepo as unknown as MyRepo);
 
 // Set return values
 vi.mocked(mockRepo.findById).mockReturnValue(mockData);

@@ -1,17 +1,14 @@
-import type { HomeContent, HomeRepository } from "./home.repository.js";
-import { homeRepository } from "./home.repository.js";
+import type { HomeContent } from "./home.repository.js";
+import { HomeRepository } from "./home.repository.js";
 
-export interface HomeService {
-	getHome: () => Promise<string>;
+export class HomeService {
+	constructor(
+		private readonly repository: HomeRepository = new HomeRepository(),
+	) {}
+
+	async getHome(): Promise<string> {
+		const { message }: HomeContent = await this.repository.readHomeContent();
+		const timestamp = new Date().toISOString();
+		return `${message} ${timestamp}`;
+	}
 }
-export const createHomeService = (
-	repository: HomeRepository = homeRepository,
-): HomeService => {
-	return {
-		getHome: async (): Promise<string> => {
-			const { message }: HomeContent = await repository.readHomeContent();
-			const timestamp = new Date().toISOString();
-			return `${message} ${timestamp}`;
-		},
-	};
-};

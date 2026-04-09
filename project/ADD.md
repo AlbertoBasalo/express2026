@@ -93,8 +93,9 @@ The software architecture follows a layered modular style per route domain with 
   - Request: middleware -> router -> validator -> controller -> service -> repository -> file utility.
   - Response: controller success path or centralized error middleware path.
 - **Design patterns in use**:
-  - **Factory functions** (`createApp`, `createApiRouter`, `createSampleController`, `createSampleService`).
-  - **Dependency injection via defaults** (controller accepts service, service accepts repository).
+  - **Factory functions** (`createApp`, `createApiRouter`) for top-level bootstrap.
+  - **Object-Oriented classes** for route layers (`HomeController`, `HomeService`, `HomeRepository`).
+  - **Dependency injection via constructor defaults** (class accepts dependencies with defaults).
   - **Repository pattern** for persistence abstraction.
   - **Middleware chain** for transport concerns.
 
@@ -106,8 +107,8 @@ The software architecture follows a layered modular style per route domain with 
 - **Context**: Tight coupling between bootstrap and app wiring makes testing and reuse harder, especially in small projects that still need e2e and unit feedback loops.
 - **Consequences**: App composition is import-safe for tests and future hosting variants; startup behavior remains explicit and isolated.
 
-### ADR 2: Layered route architecture with local wiring
-- **Decision**: Use `controller -> service -> repository` per route module, with local factory defaults instead of a global composition root.
+### ADR 2: Layered route architecture with local OOP class wiring
+- **Decision**: Use `controller -> service -> repository` OOP classes per route module, with local constructor defaults instead of a global composition root.
 - **Status**: Accepted
 - **Context**: The project optimizes for workshop readability and low ceremony while preserving dependency direction.
 - **Consequences**: Navigation is straightforward and each route remains self-contained; scaling to many routes may eventually require a centralized composition mechanism.

@@ -5,9 +5,8 @@ import {
 	Router,
 } from "express";
 import {
-	createHomeController,
 	getHomeValidator,
-	type HomeController,
+	HomeController,
 } from "./routes/home/home.controller.js";
 import { NotFoundError } from "./shared/error.class.js";
 import { HTTP_CODES } from "./shared/rest.consts.js";
@@ -19,7 +18,7 @@ export const createApiRouter = (): Router => {
 		res.status(HTTP_CODES.NO_CONTENT).end();
 	apiRouter.get("/favicon.ico", noContent);
 
-	const homeController: HomeController = createHomeController();
+	const homeController = new HomeController();
 	apiRouter.get(`/`, getHomeValidator, homeController.getHome);
 
 	const notFound = (req: Request, _res: Response, next: NextFunction) =>

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createHomeService } from "./home.service.js";
+import type { HomeRepository } from "./home.repository.js";
+import { HomeService } from "./home.service.js";
 
 describe("HomeService", () => {
 	beforeEach(() => {
@@ -20,8 +21,8 @@ describe("HomeService", () => {
 				readHomeContent: vi
 					.fn()
 					.mockResolvedValue({ message: "Welcome to a TypeScript backend" }),
-			};
-			const service = createHomeService(repositoryMock);
+			} as unknown as HomeRepository;
+			const service = new HomeService(repositoryMock);
 
 			// Act
 			const homeContent = await service.getHome();
