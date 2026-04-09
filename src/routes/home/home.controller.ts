@@ -1,10 +1,22 @@
 import type { Request, Response } from "express";
+import { createValidator } from "../../middleware/validate.middleware.js";
 import { HTTP_CODES } from "../../shared/rest.consts.js";
-import { homeService } from "./home.service.js";
+import { createHomeService, type HomeService } from "./home.service.js";
+import { validateGetHome } from "./home.validation.js";
 
-export const homeController = {
-	getHome: async (_req: Request, res: Response): Promise<Response> => {
-		const message = await homeService.getHome();
-		return res.status(HTTP_CODES.OK).send(message);
-	},
+export interface HomeController {
+	getHome: (_req: Request, res: Response) => Promise<Response>;
+}
+
+export const getHomeValidator = createValidator(validateGetHome);
+
+export const createHomeController = (
+	service: HomeService = createHomeService(),
+): HomeController => {
+	return {
+		getHome: async (_req: Request, res: Response): Promise<Response> => {
+			const message = await service.getHome();
+			return res.status(HTTP_CODES.OK).send(message);
+		},
+	};
 };

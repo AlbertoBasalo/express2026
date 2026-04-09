@@ -1,2 +1,2 @@
-export declare const PORT = 3000;
+export declare const PORT: number;
 //# sourceMappingURL=server.d.ts.map

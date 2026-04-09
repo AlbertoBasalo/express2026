@@ -1,11 +1,14 @@
-// export a function that reads the home content form a json file and returns it as a string
-import { readFile } from "fs/promises";
-import { join } from "path";
+import { readJsonFile } from "../../shared/file.utils.js";
 
-export const homeRepository = {
-	getHome: async (): Promise<string> => {
-		const filePath = join(process.cwd(), "data", "home.content.json");
-		const content = await readFile(filePath, "utf-8");
-		return content;
+export interface HomeRepository {
+	readHomeContent: () => Promise<HomeContent>;
+}
+export type HomeContent = {
+	message: string;
+};
+
+export const homeRepository: HomeRepository = {
+	readHomeContent: async (): Promise<HomeContent> => {
+		return readJsonFile<HomeContent>("home.content.json");
 	},
 };

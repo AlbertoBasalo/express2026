@@ -1,4 +1,4 @@
-export const HTTP_CODES ={
+export const HTTP_CODES = {
 	OK: 200,
 	CREATED: 201,
 	NO_CONTENT: 204,
@@ -7,4 +7,4 @@ export const HTTP_CODES ={
 	FORBIDDEN: 403,
 	NOT_FOUND: 404,
 	INTERNAL_SERVER_ERROR: 500,
-}
+};
