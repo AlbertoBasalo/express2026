@@ -9,8 +9,7 @@ export const createHomeService = (
 ): HomeService => {
 	return {
 		getHome: async (): Promise<string> => {
-			const content: HomeContent = await repository.readHomeContent();
-			const message = content.message;
+			const { message }: HomeContent = await repository.readHomeContent();
 			const timestamp = new Date().toISOString();
 			return `${message} ${timestamp}`;
 		},

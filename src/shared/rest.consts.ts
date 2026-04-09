@@ -7,7 +7,7 @@ export const HTTP_CODES = {
 	FORBIDDEN: 403,
 	NOT_FOUND: 404,
 	INTERNAL_SERVER_ERROR: 500,
-};
+} as const;
 
 export type ApiErrorResponse = {
 	requestId: string;

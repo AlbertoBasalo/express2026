@@ -1,11 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../shared/error.class.js";
 import type { Logger } from "../shared/logger.utils.js";
-import type { ApiErrorResponse } from "../shared/rest.consts.js";
-
-type RequestLocals = {
-	requestId?: string;
-};
+import type { RequestLocals } from "../shared/request-context.types.js";
+import { type ApiErrorResponse, HTTP_CODES } from "../shared/rest.consts.js";
 
 export const createErrorHandler = (logger: Logger) => {
 	return (
@@ -26,7 +23,7 @@ export const createErrorHandler = (logger: Logger) => {
 		}
 
 		logger.error(`[${requestId}] Unhandled application error`, err);
-		res.status(500).json({
+		res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).json({
 			requestId,
 			error: "INTERNAL_ERROR",
 			message: "An unexpected error occurred",

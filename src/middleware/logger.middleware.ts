@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import type { Logger } from "../shared/logger.utils.js";
+import type { RequestLocals } from "../shared/request-context.types.js";
 
-type RequestLocals = {
-	requestId?: string;
-};
+const SKIPPED_PATH_SEGMENTS = ["/com.chrome.devtools.json"] as const;
+const FAVICON_PATH = "/favicon.ico";
 
 export const createRequestLogger = (logger: Logger) => {
 	return (
@@ -29,5 +29,8 @@ export const createRequestLogger = (logger: Logger) => {
 };
 
 function shouldSkipLogging(path: string): boolean {
-	return path === "/favicon.ico" || path.includes("/com.chrome.devtools.json");
+	return (
+		path === FAVICON_PATH ||
+		SKIPPED_PATH_SEGMENTS.some((segment) => path.includes(segment))
+	);
 }

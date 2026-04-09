@@ -1,10 +1,8 @@
+import { randomUUID } from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
+import type { RequestLocals } from "../shared/request-context.types.js";
 
 const REQUEST_ID_HEADER = "x-request-id";
-
-type RequestLocals = {
-	requestId: string;
-};
 
 export const createRequestIdMiddleware = () => {
 	return (
@@ -13,8 +11,7 @@ export const createRequestIdMiddleware = () => {
 		next: NextFunction,
 	): void => {
 		const requestIdHeader = req.header(REQUEST_ID_HEADER);
-		const timestamp = Date.now();
-		const requestId = requestIdHeader?.trim() || `${timestamp}`;
+		const requestId = requestIdHeader?.trim() || randomUUID();
 
 		res.locals.requestId = requestId;
 		res.setHeader(REQUEST_ID_HEADER, requestId);
