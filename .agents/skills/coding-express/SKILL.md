@@ -22,7 +22,8 @@ For each route domain, keep these files and responsibilities explicit:
   - Defines Express paths/methods and attaches middleware.
   - Wires `validate(...)` before controller handlers.
 - `*.validation.ts`
-  - Validates request shape and throws domain/validation errors when invalid.
+  - Validates request shape and returns error messages or `null` when valid.
+  - Implemented as OOP classes (e.g., `SampleValidator`) with arrow function properties to preserve `this` context when used in middleware.
   - Must not contain business logic or persistence logic.
 - `*.controller.ts`
   - Handles HTTP contract: reads request input, calls service, sets response code/body.

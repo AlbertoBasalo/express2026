@@ -87,7 +87,7 @@ The software architecture follows a layered modular style per route domain with 
   - `request-id.middleware.ts` for request correlation (`x-request-id`) across logs and error responses.
   - `logger.middleware.ts` for request timing and status logging.
   - `error.middleware.ts` for translating `AppError` to `ApiErrorResponse` payloads and handling unknown errors.
-  - `validate.middleware.ts` adapter that converts validator functions into Express middleware.
+  - `validate.middleware.ts` adapter that converts validator class methods into Express middleware.
   - `rest.consts.ts` for HTTP status codes and shared transport contracts such as `ApiErrorResponse`.
 - **Data flow**:
   - Request: middleware -> router -> validator -> controller -> service -> repository -> file utility.
@@ -114,7 +114,7 @@ The software architecture follows a layered modular style per route domain with 
 - **Consequences**: Navigation is straightforward and each route remains self-contained; scaling to many routes may eventually require a centralized composition mechanism.
 
 ### ADR 3: Error and validation strategy without third-party schema libraries
-- **Decision**: Perform request validation through custom validator functions and middleware; standardize domain errors via `AppError`, centralized error middleware, and a shared `ApiErrorResponse` contract for error payload shape.
+- **Decision**: Perform request validation through custom OOP validator classes and middleware; standardize domain errors via `AppError`, centralized error middleware, and a shared `ApiErrorResponse` contract for error payload shape.
 - **Status**: Accepted
 - **Context**: The baseline aims to minimize dependencies and keep transport concerns at the HTTP edge.
 - **Consequences**: Low dependency footprint and explicit behavior with a single reusable error-response shape; complex schemas may become verbose and could motivate introducing a schema library later.
