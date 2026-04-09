@@ -1,97 +1,119 @@
-# Architecture Design Document (ADD)
+# Express2026 Architectural Design Document
 
-## Scope
+TypeScript Express 5 boilerplate for a small REST API with strict layering and minimal dependencies.
 
-This document captures architecture decisions derived from `AGENTS.md` and implemented in the boilerplate to keep workshop projects simple, small, and extensible without extra dependencies.
+### Table of Contents
+- [Stack and tooling](#stack-and-tooling)
+  - [Technology Stack](#technology-stack)
+  - [Development Tools](#development-tools)
+- [Systems Architecture](#systems-architecture)
+- [Software Architecture](#software-architecture)
+- [Architecture Decisions Record (ADR)](#architecture-decisions-record-adr)
+  - [ADR 1: Runtime bootstrap and app composition separation](#adr-1-runtime-bootstrap-and-app-composition-separation)
+  - [ADR 2: Layered route architecture with local wiring](#adr-2-layered-route-architecture-with-local-wiring)
+  - [ADR 3: Error and validation strategy without third-party schema libraries](#adr-3-error-and-validation-strategy-without-third-party-schema-libraries)
+  - [ADR 4: File-based content source for bootstrap simplicity](#adr-4-file-based-content-source-for-bootstrap-simplicity)
 
-## Architecture Goals
+## Stack and tooling
 
-- Keep runtime simple and workshop-friendly.
-- Preserve strict dependency direction (`controller -> service -> repository`).
-- Keep framework concerns at the HTTP edge.
-- Keep observability and error handling consistent.
-- Avoid third-party dependencies for validation and logging abstractions.
-- Unit test only services, validators and pure functions.
+### Technology Stack
+- **Language**: TypeScript (`^6.0.2`), strict mode, ES2022 target, Node ESM (`"type": "module"`).
+- **Runtime**: Node.js with Express (`^5.2.1`).
+- **Data source**: JSON files in `data/`, loaded through `readJsonFile` in `src/shared/file.utils.ts`.
+- **Testing**: Vitest (`^4.1.3`) for unit tests and Playwright (`^1.59.1`) for end-to-end tests.
+- **Static analysis**: Biome (`@biomejs/biome`) plus TypeScript type checking.
 
-## Architecture Rules
+### Development Tools
+- **Package management and scripts**: npm scripts from `package.json`.
+- **Local development workflow**:
+  - `npm run dev` runs `tsx watch src/server.ts` with `NODE_ENV=development`.
+  - `npm run test:dev` runs Vitest in watch mode.
+- **Quality and validation workflow**:
+  - `npm run lint` runs Biome checks/fixes and `tsc --noEmit`.
+  - `npm run test` runs unit tests then e2e tests.
+- **Build and deployment workflow**:
+  - `npm run build` compiles to `dist/`.
+  - `npm start` builds then starts `dist/server.js`.
+- **CI/CD**: Not configured in repository yet (no pipeline manifests currently present).
 
-- `src/server.ts` is runtime-only and starts the server.
-- `src/app.factory.ts` is the HTTP composition boundary and creates middlewares and API router instances.
-- Route modules create controllers.
-- Controllers create services.
-- Services consume repositories.
-- Request validation must happen at the controller/middleware edge (no external validation dependencies).
+## Systems Architecture
 
-## Implemented Decisions
+The system is a single-process HTTP API server. Requests enter through Express middleware, route into a bounded route module (`home`), pass through controller-service-repository layers, and return either success payloads or structured errors. Runtime configuration is centralized in `src/config/env.ts`. Persistent content currently comes from local JSON files in `data/`.
 
-### 1) App bootstrap split: `app` vs `server`
+```mermaid
+C4Context
+    title Express2026 System Context
+    Person(dev, "API Consumer", "Browser, test runner, or HTTP client")
+    System(api, "Express2026 API", "TypeScript Express REST API")
+    SystemDb(data, "JSON Data Files", "Local filesystem data source")
+    Rel(dev, api, "Calls HTTP endpoints")
+    Rel(api, data, "Reads content files")
+```
 
-- `src/app.factory.ts`  builds and returns the Express app.
-- `src/server.ts`  handles runtime bootstrap (`listen`) only.
+```mermaid
+flowchart TD
+    A[Client HTTP Request] --> B[Express App createApp]
+    B --> C[JSON Parser Middleware]
+    C --> D[Request Logger Middleware]
+    D --> E[API Router]
+    E --> F[Route Validator Middleware]
+    F --> G[Home Controller]
+    G --> H[Home Service]
+    H --> I[Home Repository]
+    I --> J[data/home.content.json]
+    E --> K[NotFoundError for unmatched routes]
+    K --> L[Error Handler Middleware]
+    G --> L
+    L --> M[JSON Error Response]
+    H --> N[Success Response]
+```
 
-Why:
-- Prevents side effects when importing app modules in tests.
-- Makes it easier to reuse the app in integration tests and alternate runtimes.
+## Software Architecture
 
-### 2) Local wiring by layer (no composition root)
+The software architecture follows a layered modular style per route domain with thin framework edge and explicit infrastructure boundaries.
 
-- `src/api.routes.ts` creates the home controller.
-- `home.controller.ts` creates the home service by default.
-- `home.service.ts` creates/uses the repository adapter by default.
+- **Composition boundary**: `src/app.factory.ts` builds middleware and router graph; `src/server.ts` only starts listening.
+- **Route module structure**:
+  - `home.controller.ts` handles HTTP contract and response codes.
+  - `home.service.ts` contains business logic (message assembly with timestamp).
+  - `home.repository.ts` isolates data access.
+  - `home.validation.ts` validates request shape.
+- **Cross-cutting modules**:
+  - `logger.middleware.ts` for request timing and status logging.
+  - `error.middleware.ts` for translating `AppError` to `ApiErrorResponse` payloads and handling unknown errors.
+  - `validate.middleware.ts` adapter that converts validator functions into Express middleware.
+  - `rest.consts.ts` for HTTP status codes and shared transport contracts such as `ApiErrorResponse`.
+- **Data flow**:
+  - Request: middleware -> router -> validator -> controller -> service -> repository -> file utility.
+  - Response: controller success path or centralized error middleware path.
+- **Design patterns in use**:
+  - **Factory functions** (`createApp`, `createApiRouter`, `createHomeController`, `createHomeService`).
+  - **Dependency injection via defaults** (controller accepts service, service accepts repository).
+  - **Repository pattern** for persistence abstraction.
+  - **Middleware chain** for transport concerns.
 
-Why:
-- Reduces indirection for workshops and small codebases.
-- Keeps navigation simple for students reading files top-down.
-- Preserves the layered pipeline without extra architectural ceremony.
+## Architecture Decisions Record (ADR)
 
-### 3) Config boundary
+### ADR 1: Runtime bootstrap and app composition separation
+- **Decision**: Keep `src/server.ts` runtime-only (`listen`) and compose the Express instance in `src/app.factory.ts`.
+- **Status**: Accepted
+- **Context**: Tight coupling between bootstrap and app wiring makes testing and reuse harder, especially in small projects that still need e2e and unit feedback loops.
+- **Consequences**: App composition is import-safe for tests and future hosting variants; startup behavior remains explicit and isolated.
 
-- Added `src/config/env.ts` with `appConfig`.
-- `PORT` now comes from config with safe default fallback.
+### ADR 2: Layered route architecture with local wiring
+- **Decision**: Use `controller -> service -> repository` per route module, with local factory defaults instead of a global composition root.
+- **Status**: Accepted
+- **Context**: The project optimizes for workshop readability and low ceremony while preserving dependency direction.
+- **Consequences**: Navigation is straightforward and each route remains self-contained; scaling to many routes may eventually require a centralized composition mechanism.
 
-Why:
-- Removes hidden runtime constants from server bootstrap.
-- Establishes one place for environment parsing and defaults.
+### ADR 3: Error and validation strategy without third-party schema libraries
+- **Decision**: Perform request validation through custom validator functions and middleware; standardize domain errors via `AppError`, centralized error middleware, and a shared `ApiErrorResponse` contract for error payload shape.
+- **Status**: Accepted
+- **Context**: The baseline aims to minimize dependencies and keep transport concerns at the HTTP edge.
+- **Consequences**: Low dependency footprint and explicit behavior with a single reusable error-response shape; complex schemas may become verbose and could motivate introducing a schema library later.
 
-### 4) Logging abstraction without new libraries
-
-- Added `src/shared/logger.utils.ts` (`Logger` interface + `consoleLogger` implementation).
-- `src/app.ts` creates middleware instances using this logger.
-
-Why:
-- Decouples application behavior from direct `console` calls.
-- Allows future replacement with structured logging without touching middleware logic.
-
-### 5) Request validation boundary (dependency-free)
-
-- Added `src/middleware/validate.middleware.ts`.
-- Exposes `createRequestValidator` with a simple `(req) => errorMessage | null` contract.
-
-Why:
-- Keeps request-shape checks at the controller edge.
-- Avoids polluting service/domain logic with transport-level validation.
-- Keeps workshop setup minimal with no external schema library.
-
-## Current File Additions
-
-- `src/app.ts`
-- `src/config/env.ts`
-- `src/shared/logger.utils.ts`
-- `src/middleware/error.middleware.ts`
-- `src/middleware/validate.middleware.ts`
-
-## Dependency Direction Rules
-
-- Controllers can import Express types and call services.
-- Services cannot import Express.
-- Repositories cannot import Express.
-- `app.factory.ts` creates middleware/router instances.
-- Route modules create controllers.
-- Controller modules create services.
-- Service modules consume repositories.
-
-## Suggested Next Steps
-
-- Keep `api.routes.ts` small; split into route modules only when multiple bounded contexts are added.
-- Add a shared API error response type (optionally in `src/shared/rest.consts.ts` or a dedicated response contract file).
-- Add a minimal `requestId` middleware and include it in logger/error payloads.
+### ADR 4: File-based content source for bootstrap simplicity
+- **Decision**: Use filesystem JSON files in `data/` as the repository data source (`readJsonFile`).
+- **Status**: Accepted
+- **Context**: A lightweight baseline without database setup reduces onboarding friction.
+- **Consequences**: Setup is trivial and deterministic for local/dev scenarios; concurrent writes, indexing, and operational scaling are limited compared to a real database.

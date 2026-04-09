@@ -26,16 +26,18 @@
 # Set up the project
 npm install
 
+# While developing, watch for changes and run tests automatically
 # Static linting and type checking
 npm run lint
-# Watch and compile the project in development mode
+# Watch and compile the project
 npm run dev
-# Watch and run unit tests in development mode
+# Watch and run unit tests
 npm run test:dev
 
-# End-to-end tests
+# Run end-to-end tests
 npm run test:e2e
-# Unit tests
+
+# Run all tests before merging or publishing
 npm run test
 
 # Build/Compile the project for production

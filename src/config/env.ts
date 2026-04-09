@@ -18,5 +18,5 @@ const parsePort = (value: string | undefined): number => {
 
 export const appConfig: AppConfig = {
 	port: parsePort(process.env[PORT_ENV_KEY]),
-	nodeEnv: process.env[NODE_ENV_KEY] ?? "development",
+	nodeEnv: process.env[NODE_ENV_KEY] ?? "production",
 };
