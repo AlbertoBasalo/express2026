@@ -2,7 +2,11 @@ import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../shared/error.class.js";
 import type { Logger } from "../shared/logger.utils.js";
 import type { RequestLocals } from "../shared/request-context.types.js";
-import { type ApiErrorResponse, HTTP_CODES } from "../shared/rest.consts.js";
+import {
+	type ApiErrorResponse,
+	HTTP_CODES,
+	NO_REQUEST_ID,
+} from "../shared/rest.consts.js";
 
 export const createErrorHandler = (logger: Logger) => {
 	return (
@@ -11,7 +15,7 @@ export const createErrorHandler = (logger: Logger) => {
 		res: Response<ApiErrorResponse, RequestLocals>,
 		_next: NextFunction,
 	): void => {
-		const requestId = res.locals.requestId ?? "missing-request-id";
+		const requestId = res.locals.requestId ?? NO_REQUEST_ID;
 
 		if (err instanceof AppError) {
 			res.status(err.statusCode).json({
