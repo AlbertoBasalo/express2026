@@ -3,25 +3,27 @@
 TypeScript Express 5 boilerplate for a small REST API with strict layering and minimal dependencies.
 
 ### Table of Contents
-- [Stack and tooling](#stack-and-tooling)
-  - [Technology Stack](#technology-stack)
-  - [Development Tools](#development-tools)
-- [Systems Architecture](#systems-architecture)
-- [Software Architecture](#software-architecture)
-- [Architecture Decisions Record (ADR)](#architecture-decisions-record-adr)
-  - [ADR 1: Runtime bootstrap and app composition separation](#adr-1-runtime-bootstrap-and-app-composition-separation)
-  - [ADR 2: Layered route architecture with local wiring](#adr-2-layered-route-architecture-with-local-wiring)
-  - [ADR 3: Error and validation strategy without third-party schema libraries](#adr-3-error-and-validation-strategy-without-third-party-schema-libraries)
-  - [ADR 4: File-based content source for bootstrap simplicity](#adr-4-file-based-content-source-for-bootstrap-simplicity)
+- [Express2026 Architectural Design Document](#express2026-architectural-design-document)
+		- [Table of Contents](#table-of-contents)
+	- [Stack and tooling](#stack-and-tooling)
+		- [Technology Stack](#technology-stack)
+		- [Development Tools](#development-tools)
+	- [Systems Architecture](#systems-architecture)
+	- [Software Architecture](#software-architecture)
+	- [Architecture Decisions Record (ADR)](#architecture-decisions-record-adr)
+		- [ADR 1: Runtime bootstrap and app composition separation](#adr-1-runtime-bootstrap-and-app-composition-separation)
+		- [ADR 2: Layered route architecture with local wiring](#adr-2-layered-route-architecture-with-local-wiring)
+		- [ADR 3: Error and validation strategy without third-party schema libraries](#adr-3-error-and-validation-strategy-without-third-party-schema-libraries)
+		- [ADR 4: File-based content source for bootstrap simplicity](#adr-4-file-based-content-source-for-bootstrap-simplicity)
 
 ## Stack and tooling
 
 ### Technology Stack
-- **Language**: TypeScript (`^6.0.2`), strict mode, ES2022 target, Node ESM (`"type": "module"`).
-- **Runtime**: Node.js with Express (`^5.2.1`).
-- **Data source**: JSON files in `data/`, loaded through `readJsonFile` in `src/shared/file.utils.ts`.
-- **Testing**: Vitest (`^4.1.3`) for unit tests and Playwright (`^1.59.1`) for end-to-end tests.
-- **Static analysis**: Biome (`@biomejs/biome`) plus TypeScript type checking.
+- **Language**: TypeScript in strict mode, ES2022 target, Node ESM
+- **Runtime**: Node.js with Express
+- **Data source**: JSON files in `data/` folder, accessed via a repository abstraction
+- **Testing**: Vitest for unit tests and Playwright for end-to-end tests.
+- **Static analysis**: Biome plus TypeScript type checking.
 
 ### Development Tools
 - **Package management and scripts**: npm scripts from `package.json`.
@@ -32,11 +34,11 @@ TypeScript Express 5 boilerplate for a small REST API with strict layering and m
   - `npm run lint` runs Biome checks/fixes and `tsc --noEmit`.
   - `npm run test:unit` runs unit tests.
   - `npm run test:e2e` runs e2e tests.
-  - `npm run test` runs unit tests then e2e tests.
+  - `npm test` runs unit tests then e2e tests.
 - **Build and deployment workflow**:
   - `npm run build` compiles to `dist/`.
   - `npm start` builds then starts `dist/server.js`.
-- **CI/CD**: Not configured in repository yet (no pipeline manifests currently present).
+- **CI/CD**: Not configured in repository yet
 
 ## Systems Architecture
 
@@ -60,10 +62,10 @@ flowchart TD
     D --> E[Request Logger Middleware]
     E --> F[API Router]
     F --> G[Route Validator Middleware]
-    G --> H[Home Controller]
-    H --> I[Home Service]
-    I --> J[Home Repository]
-    J --> K[data/home.content.json]
+    G --> H[Sample Controller]
+    H --> I[Sample Service]
+    I --> J[Sample Repository]
+    J --> K[data/Sample.content.json]
     F --> L[NotFoundError for unmatched routes]
     L --> M[Error Handler Middleware]
     H --> M
@@ -77,10 +79,10 @@ The software architecture follows a layered modular style per route domain with 
 
 - **Composition boundary**: `src/app.factory.ts` builds middleware and router graph; `src/server.ts` only starts listening.
 - **Route module structure**:
-  - `home.controller.ts` handles HTTP contract and response codes.
-  - `home.service.ts` contains business logic (message assembly with timestamp).
-  - `home.repository.ts` isolates data access.
-  - `home.validation.ts` validates request shape.
+  - `sample.controller.ts` handles HTTP contract and response codes.
+  - `sample.service.ts` contains business logic (message assembly with timestamp).
+  - `sample.repository.ts` isolates data access.
+  - `sample.validation.ts` validates request shape.
 - **Cross-cutting modules**:
   - `request-id.middleware.ts` for request correlation (`x-request-id`) across logs and error responses.
   - `logger.middleware.ts` for request timing and status logging.
@@ -91,7 +93,7 @@ The software architecture follows a layered modular style per route domain with 
   - Request: middleware -> router -> validator -> controller -> service -> repository -> file utility.
   - Response: controller success path or centralized error middleware path.
 - **Design patterns in use**:
-  - **Factory functions** (`createApp`, `createApiRouter`, `createHomeController`, `createHomeService`).
+  - **Factory functions** (`createApp`, `createApiRouter`, `createSampleController`, `createSampleService`).
   - **Dependency injection via defaults** (controller accepts service, service accepts repository).
   - **Repository pattern** for persistence abstraction.
   - **Middleware chain** for transport concerns.

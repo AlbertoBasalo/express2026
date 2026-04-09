@@ -1,9 +1,9 @@
 # Agents Instructions
 
 - **Root_Folder**: `/`
-- **Agents_Folder**: `/.agents` 
+- **Agents_Folder**: `/.agents`
 - **Agents_file**: `/AGENTS.md`
-- **Project_Folder**: `/project` 
+- **Project_Folder**: `/project`
 
 ## Product Overview
 
@@ -13,11 +13,11 @@
 
 ### Tech Stack
 
-- **Language**: TypeScript (`^6.0.2`) targeting ES2022 with strict compiler options
-- **Framework**: Express (`^5.2.1`) on Node.js ESM (`module: nodenext`)
-- **Database**: No database, just json files at `./data` folder 
+- **Language**: `TypeScript 6` targeting ES2022 with strict compiler options
+- **Framework**: `Express 5` on `Node.js ESM`
+- **Database**: No database, just json files at `./data` folder
 - **Security**: No security configured yet
-- **Testing**: Vitest (`^4.1.3`) for unit tests, Playwright (`^1.59.1`) for e2e
+- **Testing**: `Vitest 4` for unit tests, `Playwright 1.5` for e2e
 - **Logging**: Custom request logger middleware + `console` output
 
 ### Development workflow
@@ -27,12 +27,12 @@
 npm install
 
 # While developing, watch for changes and run tests automatically
-# Static linting and type checking
-npm run lint
-# Watch and compile the project
+# Watch and compile the project while developing
 npm run dev
-# Watch and run unit tests
+# Watch and run unit tests while writing tests
 npm run test:dev
+# Static linting and type checking after writing code
+npm run lint
 
 # Run unit tests
 npm run test:unit
@@ -40,7 +40,7 @@ npm run test:unit
 npm run test:e2e
 
 # Run all tests before merging or publishing
-npm run test
+npm test
 
 # Build/Compile the project for production
 npm run build
@@ -50,7 +50,7 @@ npm start
 
 ### Folder structure
 ```text
-.                         # Project root  
+.                         # Project root
 ├── AGENTS.md             # Agent instructions for this repository
 ├── README.md             # Project overview
 ├── package.json          # Scripts and dependencies

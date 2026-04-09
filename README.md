@@ -1,8 +1,10 @@
-# Node Express 2026 Boilerplate
+# Express2026 Boilerplate
 
-[Repository GitHub Alberto Basalo Labs NodeExpress2026](https://github.com/AlbertoBasaloLabs/node-express-2026) boilerplate for creating Node Express REST Apis in 2026
+[Repository GitHub Alberto Basalo Labs Express2026](https://github.com/AlbertoBasaloLabs/express2026)
 
 ## Boilerplate
+
+**Express2026** is a TypeScript Express 5 boilerplate for building REST APIs with a layered structure per route.
 
 ---
 
