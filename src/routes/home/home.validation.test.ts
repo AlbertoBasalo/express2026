@@ -1,15 +1,27 @@
 import type { Request } from "express";
-import { expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 import { validateGetHome } from "./home.validation.js";
 
-test("validateGetHome returns null if no query parameters", () => {
-	const reqInput = { query: {} } as unknown as Request;
-	const validationError = validateGetHome(reqInput);
-	expect(validationError).toBeNull();
-});
+describe("validateGetHome", () => {
+	it("returns null when no query parameters are present", () => {
+		// Arrange
+		const reqInput = { query: {} } as unknown as Request;
 
-test("validateGetHome returns an error if query parameters are present", () => {
-	const reqInput = { query: { lang: "en" } } as unknown as Request;
-	const validationError = validateGetHome(reqInput);
-	expect(validationError).toBe("Query parameters are not allowed");
+		// Act
+		const validationError = validateGetHome(reqInput);
+
+		// Assert
+		expect(validationError).toBeNull();
+	});
+
+	it("returns an error when query parameters are present", () => {
+		// Arrange
+		const reqInput = { query: { lang: "en" } } as unknown as Request;
+
+		// Act
+		const validationError = validateGetHome(reqInput);
+
+		// Assert
+		expect(validationError).toBe("Query parameters are not allowed");
+	});
 });

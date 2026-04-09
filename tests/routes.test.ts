@@ -1,11 +1,16 @@
 import test, { expect } from "@playwright/test";
 
-test("not found route returns a 404", async ({ page }) => {
-	const invalidRoute = "/invalid-route";
-	const response = await page.goto(invalidRoute);
-	expect(response).not.toBeNull();
-	const body = await response?.text();
-	const status = response?.status();
-	expect(status).toBe(404);
-	expect(body).toContain(`Route: ${invalidRoute}`);
+test.describe("Route handling", () => {
+	test("returns 404 for unknown routes", async ({ page }) => {
+		// Arrange
+		const invalidRoute = "/invalid-route";
+
+		// Act
+		const response = await page.goto(invalidRoute);
+		expect(response).not.toBeNull();
+
+		// Assert
+		expect(response?.status()).toBe(404);
+		await expect(page.locator("body")).toContainText(`Route: ${invalidRoute}`);
+	});
 });

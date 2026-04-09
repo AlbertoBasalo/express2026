@@ -56,6 +56,7 @@ npm start
 ├── package.json          # Scripts and dependencies
 ├── tsconfig.json         # TypeScript compiler config
 ├── playwright.config.ts  # E2E test configuration
+├── .agents/              # Agents skills and prompts
 ├── data/                 # Runtime JSON data source(s)
 │   └── home.content.json
 ├── dist/                 # Compiled output

@@ -30,6 +30,8 @@ TypeScript Express 5 boilerplate for a small REST API with strict layering and m
   - `npm run test:dev` runs Vitest in watch mode.
 - **Quality and validation workflow**:
   - `npm run lint` runs Biome checks/fixes and `tsc --noEmit`.
+  - `npm run test:unit` runs unit tests.
+  - `npm run test:e2e` runs e2e tests.
   - `npm run test` runs unit tests then e2e tests.
 - **Build and deployment workflow**:
   - `npm run build` compiles to `dist/`.
