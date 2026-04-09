@@ -38,7 +38,7 @@ TypeScript Express 5 boilerplate for a small REST API with strict layering and m
 
 ## Systems Architecture
 
-The system is a single-process HTTP API server. Requests enter through Express middleware, route into a bounded route module (`home`), pass through controller-service-repository layers, and return either success payloads or structured errors. Runtime configuration is centralized in `src/config/env.ts`. Persistent content currently comes from local JSON files in `data/`.
+The system is a single-process HTTP API server. Requests enter through Express middleware, route into a bounded route module (`home`), pass through controller-service-repository layers, and return either success payloads or structured errors. Runtime configuration is centralized in `src/env.config.ts`. Persistent content currently comes from local JSON files in `data/`.
 
 ```mermaid
 C4Context
@@ -54,18 +54,19 @@ C4Context
 flowchart TD
     A[Client HTTP Request] --> B[Express App createApp]
     B --> C[JSON Parser Middleware]
-    C --> D[Request Logger Middleware]
-    D --> E[API Router]
-    E --> F[Route Validator Middleware]
-    F --> G[Home Controller]
-    G --> H[Home Service]
-    H --> I[Home Repository]
-    I --> J[data/home.content.json]
-    E --> K[NotFoundError for unmatched routes]
-    K --> L[Error Handler Middleware]
-    G --> L
-    L --> M[JSON Error Response]
-    H --> N[Success Response]
+    C --> D[Request ID Middleware]
+    D --> E[Request Logger Middleware]
+    E --> F[API Router]
+    F --> G[Route Validator Middleware]
+    G --> H[Home Controller]
+    H --> I[Home Service]
+    I --> J[Home Repository]
+    J --> K[data/home.content.json]
+    F --> L[NotFoundError for unmatched routes]
+    L --> M[Error Handler Middleware]
+    H --> M
+    M --> N[JSON Error Response]
+    H --> O[Success Response]
 ```
 
 ## Software Architecture
@@ -79,6 +80,7 @@ The software architecture follows a layered modular style per route domain with 
   - `home.repository.ts` isolates data access.
   - `home.validation.ts` validates request shape.
 - **Cross-cutting modules**:
+  - `request-id.middleware.ts` for request correlation (`x-request-id`) across logs and error responses.
   - `logger.middleware.ts` for request timing and status logging.
   - `error.middleware.ts` for translating `AppError` to `ApiErrorResponse` payloads and handling unknown errors.
   - `validate.middleware.ts` adapter that converts validator functions into Express middleware.

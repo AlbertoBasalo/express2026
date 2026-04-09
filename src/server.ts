@@ -1,5 +1,5 @@
 import { createApp } from "./app.factory.js";
-import { appConfig } from "./config/env.js";
+import { appConfig } from "./env.config.js";
 import { consoleLogger } from "./shared/logger.utils.js";
 
 const app = createApp();

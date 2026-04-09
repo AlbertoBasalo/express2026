@@ -98,8 +98,8 @@ expect(mockRepo.save).toHaveBeenCalledTimes(1);
 
 ## Commands
 
-- **Must use watch mode**: `npm run test:dev` (auto-rerun unit tests during development).
-- **Must use unit-only one-time run**: `vitest run ./src`.
+- **Must use one-time run**: `npm run test:unit` (once after refactoring ).
+- **May use watch mode**: `npm run test:dev` (auto-rerun unit tests during testing development).
 - **May run full suite**: `npm run test` (unit + e2e) for broader validation.
 
 ## Best Practices

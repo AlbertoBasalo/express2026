@@ -34,6 +34,8 @@ npm run dev
 # Watch and run unit tests
 npm run test:dev
 
+# Run unit tests
+npm run test:unit
 # Run end-to-end tests
 npm run test:e2e
 
@@ -63,6 +65,7 @@ npm start
 │   ├── server.ts
 │   ├── app.factory.ts
 │   ├── api.routes.ts
+│   ├── env.config.ts
 │   ├── middleware/       # Middleware for the main server
 │   ├── routes/           # Routes for the main server
 │   └── shared/           # Shared utilities for server and routes
