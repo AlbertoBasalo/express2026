@@ -16,21 +16,20 @@ export const createErrorHandler = (logger: Logger) => {
 		_next: NextFunction,
 	): void => {
 		const requestId = res.locals.requestId ?? NO_REQUEST_ID;
-
-		if (err instanceof AppError) {
-			res.status(err.statusCode).json({
-				requestId,
-				error: err.code,
-				message: err.message,
-			});
-			return;
-		}
-
-		logger.error(`[${requestId}] Unhandled application error`, err);
-		res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).json({
+		const apiErrorResponse: ApiErrorResponse = {
 			requestId,
 			error: "INTERNAL_ERROR",
 			message: "An unexpected error occurred",
-		});
+		};
+		let apiStatusCode: number = HTTP_CODES.INTERNAL_SERVER_ERROR;
+
+		if (err instanceof AppError) {
+			apiStatusCode = err.statusCode;
+			apiErrorResponse.error = err.code;
+			apiErrorResponse.message = err.message;
+		}
+
+		logger.error(`[${requestId}] Got an error`, err);
+		res.status(apiStatusCode).json(apiErrorResponse);
 	};
 };

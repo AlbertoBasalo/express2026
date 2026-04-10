@@ -1,10 +1,7 @@
 import { readJsonFile } from "../../shared/file.utils.js";
+import type { HomeContent } from "./home-content.type.js";
 
 const HOME_CONTENT_FILE_NAME = "home.content.json";
-
-export type HomeContent = {
-	message: string;
-};
 
 export class HomeRepository {
 	async readHomeContent(): Promise<HomeContent> {
