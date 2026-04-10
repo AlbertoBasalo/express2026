@@ -1,12 +1,13 @@
 import type { Request } from "express";
+import { err, ok, type Result } from "../../shared/result.type.js";
 
 export class HomeValidator {
-	validateGetHome = (req: Request): string | null => {
+	validateGetHome = (req: Request): Result<void, string> => {
 		// Home endpoint does not accept query parameters.
 		if (Object.keys(req.query).length > 0) {
-			return "Query parameters are not allowed";
+			return err("Query parameters are not allowed");
 		}
 
-		return null;
+		return ok(undefined);
 	};
 }
