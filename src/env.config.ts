@@ -8,11 +8,10 @@ const NODE_ENV_KEY = "NODE_ENV";
 
 const parsePort = (value: string | undefined): number => {
 	const parsedPort = Number(value);
-
-	if (!value || Number.isNaN(parsedPort) || parsedPort <= 0) {
+	const isInvalidPort = !value || Number.isNaN(parsedPort) || parsedPort <= 0;
+	if (isInvalidPort) {
 		return 3000;
 	}
-
 	return parsedPort;
 };
 

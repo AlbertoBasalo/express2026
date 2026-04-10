@@ -14,6 +14,7 @@ description: "Best practices for clean and maintainable code in TypeScript. To b
 - Should avoid deeply nested structures.
 - Should use early returns to minimize indentation.
 - Should avoid negative conditionals (e.g., `!isOk`); prefer handling the positive case first.
+- Avoid blank lines in the middle of functions (use comments instead or create helper functions).
 ### Classes and modules
 - Should avoid primitive obsession by defining types.
 - Should favor composition over inheritance.
@@ -33,9 +34,9 @@ description: "Best practices for clean and maintainable code in TypeScript. To b
 - Should favor named exports over default exports.
 - Must use file names in `kebab-case.{pattern}.ts` format. Example: `user-login.service.ts`.
 - Must use strict typing and avoid `any`.
-- Should place reusable `types` in dedicated files; may colocate small local types.
+- Should place reusable `types` in dedicated files; may colocate tiny local types.
 - Should use `as const` for constant values to infer literal types.
-- Should place reusable `interfaces` in dedicated files; may colocate small local contracts when readability improves.
-- Should avoid unnecessary `null` and `undefined`; prefer using the `Result` pattern (`Ok` and `Err` types) for validation and error handling instead of returning `null`.
+- Should place reusable `interfaces` in dedicated files; may colocate tiny local contracts.
+- Should avoid `null` and `undefined`; prefer using the `Result` pattern (`Ok` and `Err` types).
 - Should leverage utility types (e.g., `Partial`, `Pick`, `Omit`) where they improve clarity.
 - Should use async/await; add try/catch when adding contextual error handling or recovery.

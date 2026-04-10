@@ -10,7 +10,7 @@ Use this skill when creating or changing any API endpoint in `src/routes/`.
 ## Goal
 
 Deliver endpoint changes that stay aligned with the current architecture in `project/ADD.md`:
-- Local route module wiring with `controller -> service -> repository`.
+- Local route module wiring with `router -> controller -> service -> repository`.
 - Transport concerns at the edge (validation + controller), business logic in service.
 - Centralized error handling through `AppError` and error middleware.
 
@@ -18,16 +18,19 @@ Deliver endpoint changes that stay aligned with the current architecture in `pro
 
 For each route domain, keep these files and responsibilities explicit:
 
-- `*.router.ts` (replaces direct `*.routes.ts` wiring at the domain level)
-  - Defines Express paths/methods and attaches middleware as part of an OOP Router class.
-  - Wires `validate(...)` before controller handlers inside its initialization method.
-- `*.validation.ts`
-  - Validates request shape and returns a `Result` type (`Ok` or `Err`) rather than `null`.
-  - Implemented as OOP classes (e.g., `SampleValidator`) with arrow function properties to preserve `this` context when used in middleware.
-  - Must not contain business logic or persistence logic.
+- `*.router.ts`
+  - Defines Express paths/methods and attaches middleware in a functional router module (no router class required).
+  - Wires validation middleware before controller handlers.
+  - Must bind classic controller methods when passing callbacks (`controller.method.bind(controller)`).
 - `*.controller.ts`
-  - Handles HTTP contract: reads request input, calls service, sets response code/body.
+  - Handles HTTP contract: request validation methods and response handlers.
+  - Prefer classic OOP instance methods (non-arrow) unless a route explicitly needs a different pattern.
+  - Must define request validation methods at controller level (no per-route validation files).
   - Should stay thin and deterministic.
+- `shared` validation utilities (optional, cross-route only)
+  - Reusable functional helpers may live in `src/shared/` when the same validation logic appears in multiple routes.
+  - Route-specific validation must stay in the corresponding controller methods.
+  - Must not contain business logic or persistence logic.
 - `*.service.ts`
   - Contains business rules and orchestration.
   - Depends on repository abstraction (classes), not Express request/response types.
@@ -37,17 +40,18 @@ For each route domain, keep these files and responsibilities explicit:
 
 ## Implementation Rules
 
-- Must preserve dependency direction: `router -> validation/controller -> service -> repository`.
-- Must keep local class-based Object-Oriented wiring in the route module via constructor dependency injection (avoid global container changes unless explicitly requested).
+- Must preserve dependency direction: `router -> controller -> service -> repository`.
+- Must keep local class-based Object-Oriented wiring in controller/service/repository via constructor dependency injection (avoid global container changes unless explicitly requested).
 - Must use shared HTTP constants/contracts when returning status/error payloads.
+- Must use `makeMiddleware` from `validate.middleware.ts` for request validation adaptation to avoid repeating `isOk`/`400` mapping in each route.
 - Must use `AppError`-compatible behavior for expected failures so middleware can produce standard error responses.
-- Should keep endpoint handlers small and push branching logic into service/validation.
+- Should keep endpoint handlers small and push branching logic into service and focused validation methods.
 - Should avoid leaking file-system details outside repository.
 
 ## Adding a New Endpoint
 
-1. Update or create the relevant `*.router.ts` class with method/path and middleware chain. If it's a new domain, register the router class in `api.routes.ts`.
-2. Add/update validation in `*.validation.ts` for request params/query/body.
+1. Update or create the relevant `*.router.ts` with method/path and middleware chain. If it's a new domain, register the router in `api.routes.ts`.
+2. Add/update validation methods in `*.controller.ts` for params/query/body. Do not create `*.validation.ts` files in route folders.
 3. Add/update controller handler in `*.controller.ts`.
 4. Add/update service method in `*.service.ts`.
 5. Add/update repository method in `*.repository.ts` if data access changes are needed.
@@ -75,7 +79,7 @@ Recommended commands:
 ## Definition of Done
 
 - [ ] Route wiring follows existing module pattern.
-- [ ] Validation, controller, service, and repository responsibilities are separated.
+- [ ] Validation logic is implemented in controller methods, with service/repository concerns separated.
 - [ ] Error handling follows centralized `AppError`/middleware contract.
 - [ ] Tests updated for changed behavior and passing.
 - [ ] Lint/type checks pass.

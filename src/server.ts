@@ -8,7 +8,6 @@ export const PORT = appConfig.port;
 
 app.listen(PORT, () => {
 	const mode = appConfig.nodeEnv;
-	consoleLogger.info(
-		`Server running at http://localhost:${PORT} in ${mode} mode`,
-	);
+	const message = `Server running at http://localhost:${PORT} in ${mode} mode`;
+	consoleLogger.info(message);
 });

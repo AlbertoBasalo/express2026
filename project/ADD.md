@@ -12,9 +12,10 @@ TypeScript Express 5 boilerplate for a small REST API with strict layering and m
 	- [Software Architecture](#software-architecture)
 	- [Architecture Decisions Record (ADR)](#architecture-decisions-record-adr)
 		- [ADR 1: Runtime bootstrap and app composition separation](#adr-1-runtime-bootstrap-and-app-composition-separation)
-		- [ADR 2: Layered route architecture with local wiring](#adr-2-layered-route-architecture-with-local-wiring)
+		- [ADR 2: Layered route architecture with functional router and OOP controller/service/repository](#adr-2-layered-route-architecture-with-functional-router-and-oop-controllerservicerepository)
 		- [ADR 3: Error and validation strategy without third-party schema libraries](#adr-3-error-and-validation-strategy-without-third-party-schema-libraries)
 		- [ADR 4: File-based content source for bootstrap simplicity](#adr-4-file-based-content-source-for-bootstrap-simplicity)
+		- [ADR 5: Controller-level validation and shared functional validation utilities](#adr-5-controller-level-validation-and-shared-functional-validation-utilities)
 
 ## Stack and tooling
 
@@ -79,26 +80,26 @@ The software architecture follows a layered modular style per route domain with 
 
 - **Composition boundary**: `src/app.factory.ts` builds middleware and router graph; `src/server.ts` only starts listening.
 - **Route module structure**:
-  - `sample.router.ts` encapsulates the route definition, middleware, and dependency wiring for a specific domain.
-  - `sample.controller.ts` handles HTTP contract and response codes.
+  - `sample.router.ts` defines route-to-handler mapping and middleware composition as a functional Express module.
+  - `sample.controller.ts` handles HTTP contract (mandatory validation methods + response mapping) using OOP class methods.
   - `sample.service.ts` contains business logic (message assembly with timestamp).
   - `sample.repository.ts` isolates data access.
-  - `sample.validation.ts` validates request shape.
 - **Cross-cutting modules**:
   - `request-id.middleware.ts` for request correlation (`x-request-id`) across logs and error responses.
   - `logger.middleware.ts` for request timing and status logging.
   - `error.middleware.ts` for translating `AppError` to `ApiErrorResponse` payloads and handling unknown errors.
-  - `validate.middleware.ts` adapter that converts validator class methods into Express middleware.
+  - `validate.middleware.ts` adapter (`makeMiddleware`) that converts request validator functions into Express middleware and maps validation errors to `AppError`.
   - `rest.consts.ts` for HTTP status codes and shared transport contracts such as `ApiErrorResponse`.
 - **Data flow**:
-  - Request: middleware -> router -> validator -> controller -> service -> repository -> file utility.
+  - Request: middleware -> router -> validation middleware -> controller -> service -> repository -> file utility.
   - Response: controller success path or centralized error middleware path.
 - **Design patterns in use**:
   - **Factory functions** (`createApp`, `createApiRouter`) for top-level bootstrap.
-  - **Object-Oriented classes** for route layers (`HomeController`, `HomeService`, `HomeRepository`).
+  - **Object-Oriented classes** for route/business layers (`HomeController`, `HomeService`, `HomeRepository`).
   - **Dependency injection via constructor defaults** (class accepts dependencies with defaults).
   - **Repository pattern** for persistence abstraction.
   - **Middleware chain** for transport concerns.
+  - **Explicit `this` binding at route registration time** (`controller.method.bind(controller)`) to keep controller methods in classic OOP style without arrow properties.
 
 ## Architecture Decisions Record (ADR)
 
@@ -108,20 +109,26 @@ The software architecture follows a layered modular style per route domain with 
 - **Context**: Tight coupling between bootstrap and app wiring makes testing and reuse harder, especially in small projects that still need e2e and unit feedback loops.
 - **Consequences**: App composition is import-safe for tests and future hosting variants; startup behavior remains explicit and isolated.
 
-### ADR 2: Layered route architecture with local OOP class wiring
-- **Decision**: Use `router -> controller -> service -> repository` OOP classes per route module, with local constructor defaults instead of a global composition root. The router class encapsulates the route definitions.
+### ADR 2: Layered route architecture with functional router and OOP controller/service/repository
+- **Decision**: Use `router -> controller -> service -> repository` layering per route module, with a functional router module and OOP classes for controller/service/repository. Keep local constructor defaults instead of a global composition root, and bind controller methods in the router when passing callbacks to Express.
 - **Status**: Accepted
-- **Context**: The project optimizes for workshop readability and low ceremony while preserving dependency direction and keeping the main router file clean.
-- **Consequences**: Navigation is straightforward, each route domain is fully self-contained; scaling to many routes may eventually require a centralized composition mechanism.
+- **Context**: The project optimizes for readability for OOP-oriented teams while keeping Express wiring idiomatic and low-ceremony.
+- **Consequences**: Routing remains compact and familiar to Express users; controller classes stay clean and Java-like. Router files carry explicit binding noise (`bind`) by design.
 
 ### ADR 3: Error and validation strategy without third-party schema libraries
-- **Decision**: Perform request validation through custom OOP validator classes returning `Result` types (with `Ok` and `Err` variants) to avoid `null` returns. Standardize domain errors via `AppError`, centralized error middleware, and a shared `ApiErrorResponse` contract for error payload shape.
+- **Decision**: Perform request validation with controller-level validator methods returning `Result` types (`Ok` and `Err`) to avoid `null` returns. Adapt those validator methods with `makeMiddleware` and standardize expected failures via `AppError`, centralized error middleware, and a shared `ApiErrorResponse` contract for error payload shape.
 - **Status**: Accepted
-- **Context**: The baseline aims to minimize dependencies, keep transport concerns at the HTTP edge, and avoid null-checks by using explicit Result objects. Positive conditionals (avoiding negative ones like `!isOk`) should be preferred.
-- **Consequences**: Low dependency footprint and explicit behavior with a single reusable error-response shape; complex schemas may become verbose and could motivate introducing a schema library later. `Result` types provide type-safe error handling.
+- **Context**: The baseline aims to minimize dependencies, keep transport concerns at the HTTP edge, avoid repeating `isOk`/`400` boilerplate in every route, and avoid null-checks by using explicit Result objects.
+- **Consequences**: Low dependency footprint and explicit behavior with a single reusable error-response shape; route folders stay compact with fewer files. Complex schemas may become verbose and could motivate introducing a schema library later.
 
 ### ADR 4: File-based content source for bootstrap simplicity
 - **Decision**: Use filesystem JSON files in `data/` as the repository data source (`readJsonFile`).
 - **Status**: Accepted
 - **Context**: A lightweight baseline without database setup reduces onboarding friction.
 - **Consequences**: Setup is trivial and deterministic for local/dev scenarios; concurrent writes, indexing, and operational scaling are limited compared to a real database.
+
+### ADR 5: Controller-level validation and shared functional validation utilities
+- **Decision**: Validation is mandatory at controller level for every endpoint. Do not create `*.validation.ts` files inside route folders. If validation logic is repeated across routes, extract reusable functional helpers to `src/shared/`.
+- **Status**: Accepted
+- **Context**: The team prefers an OOP mental model with fewer files per route module and explicit HTTP responsibility concentrated in controller + router.
+- **Consequences**: Route module navigation is simpler and more consistent; controller files may grow and require periodic refactoring. Reuse is still supported through shared functional utilities without reintroducing per-route validation files.

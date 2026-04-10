@@ -4,7 +4,7 @@ import type { Result } from "../shared/result.type.js";
 
 export type RequestValidator = (req: Request) => Result<unknown, string>;
 
-export const createValidator = (validate: RequestValidator) => {
+export const makeMiddleware = (validate: RequestValidator) => {
 	return (req: Request, _res: Response, next: NextFunction): void => {
 		const result = validate(req);
 

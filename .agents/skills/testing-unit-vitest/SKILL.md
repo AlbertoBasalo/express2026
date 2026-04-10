@@ -5,11 +5,11 @@ description: "Writes and maintains unit tests using Vitest. To be used for testi
 
 # Unit Testing Skill
 
-Use this skill to write and maintain unit tests for business logic implemented in `src/`.
+Use this skill to write and maintain unit tests for logic implemented in `src/` (services, controllers, validators, and utilities).
 
 ## Scope
 
-- **Must** add unit tests for new services/utilities with business logic.
+- **Must** add unit tests for changed services/controllers/utilities with behavior changes.
 - **Must** add or update tests for bug fixes to prevent regressions.
 - **Should** cover edge cases, boundary conditions, and error handling for complex logic.
 - **Must** keep tests passing before and after refactoring.
@@ -53,6 +53,7 @@ describe('MyService', () => {
 
 - **Should** use `vi.fn()` for repositories and external dependencies.
 - **Must** avoid real I/O in unit tests.
+- **Should** mock injected service dependencies when testing controllers.
 
 ```typescript
 import { vi } from 'vitest';
@@ -72,6 +73,13 @@ vi.mocked(mockRepo.findById).mockReturnValue(mockData);
 // Verify calls
 expect(mockRepo.save).toHaveBeenCalledWith(expected);
 expect(mockRepo.save).toHaveBeenCalledTimes(1);
+```
+
+Controller-focused example:
+
+```typescript
+const serviceMock = { getHome: vi.fn().mockResolvedValue("ok") };
+const controller = new HomeController(serviceMock as unknown as HomeService);
 ```
 
 ## Workflow

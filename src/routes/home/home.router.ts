@@ -1,23 +1,13 @@
 import { Router } from "express";
-import { createValidator } from "../../middleware/validate.middleware.js";
+import { makeMiddleware } from "../../middleware/validate.middleware.js";
 import { HomeController } from "./home.controller.js";
-import { HomeValidator } from "./home.validator.js";
 
-export class HomeRouter {
-	readonly router = Router();
+const homeController = new HomeController();
 
-	constructor(
-		private readonly controller = new HomeController(),
-		private readonly validator = new HomeValidator(),
-	) {
-		this.initializeRoutes();
-	}
+export const homeRouter = Router();
 
-	private initializeRoutes(): void {
-		this.router.get(
-			"/",
-			createValidator(this.validator.validateGetHome),
-			this.controller.getHome,
-		);
-	}
-}
+homeRouter.get(
+	"/",
+	makeMiddleware(homeController.validateGetHome.bind(homeController)),
+	homeController.getHome.bind(homeController),
+);

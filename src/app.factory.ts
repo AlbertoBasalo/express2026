@@ -7,16 +7,10 @@ import { consoleLogger } from "./shared/logger.utils.js";
 
 export const createApp = (): Express => {
 	const app = express();
-	const requestIdMiddleware = createRequestIdMiddleware();
-	const requestLogger = createRequestLogger(consoleLogger);
-	const errorHandler = createErrorHandler(consoleLogger);
-	const apiRouter = createApiRouter();
-
 	app.use(express.json());
-	app.use(requestIdMiddleware);
-	app.use(requestLogger);
-	app.use(apiRouter);
-	app.use(errorHandler);
-
+	app.use(createRequestIdMiddleware());
+	app.use(createRequestLogger(consoleLogger));
+	app.use(createErrorHandler(consoleLogger));
+	app.use(createApiRouter());
 	return app;
 };
