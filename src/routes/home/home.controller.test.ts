@@ -40,11 +40,11 @@ describe("HomeController", () => {
 			const statusMock = vi.fn().mockReturnValue({
 				send: sendMock,
 			});
-			const res = {
+			const responseMock = {
 				status: statusMock,
 			} as unknown as Response;
 			// Act
-			await controller.getHome({} as Request, res);
+			await controller.getHome({} as Request, responseMock);
 			// Assert
 			expect(serviceMock.getHome).toHaveBeenCalledOnce();
 			expect(statusMock).toHaveBeenCalledWith(HTTP_CODES.OK);
