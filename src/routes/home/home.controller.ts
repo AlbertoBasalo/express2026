@@ -5,8 +5,8 @@ import { HomeService } from "./home.service.js";
 export class HomeController {
 	constructor(private readonly service = new HomeService()) {}
 
-	async getHome(_req: Request, res: Response): Promise<Response> {
+	getHome = async (_req: Request, res: Response): Promise<Response> => {
 		const message = await this.service.getHome();
 		return res.status(HTTP_CODES.OK).send(message);
-	}
+	};
 }
