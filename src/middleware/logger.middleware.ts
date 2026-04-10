@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import type { Logger } from "../shared/logger.utils.js";
 import type { RequestLocals } from "../shared/request-context.types.js";
-import { NO_REQUEST_ID } from "../shared/rest.consts.js";
+import { getRequestId } from "./request-id.middleware.js";
 
 const SKIPPED_PATH_SEGMENTS = ["/com.chrome.devtools.json"] as const;
 const FAVICON_PATH = "/favicon.ico";
@@ -17,21 +17,27 @@ export const createRequestLogger = (logger: Logger) => {
 			return;
 		}
 		const start = Date.now();
-
 		res.on("finish", () => {
 			const duration = Date.now() - start;
-			const requestId = res.locals.requestId ?? NO_REQUEST_ID;
-			const message = `[${requestId}] ${req.method} ${req.path} ${res.statusCode} ${duration}ms`;
+			const message = buildMessage(req, res, duration);
 			logger.info(message);
 		});
-
 		next();
 	};
 };
 
-function shouldSkipLogging(path: string): boolean {
-	return (
+const shouldSkipLogging = (path: string): boolean => {
+	const shouldSkip =
 		path === FAVICON_PATH ||
-		SKIPPED_PATH_SEGMENTS.some((segment) => path.includes(segment))
-	);
-}
+		SKIPPED_PATH_SEGMENTS.some((segment) => path.includes(segment));
+	return shouldSkip;
+};
+
+const buildMessage = (
+	req: Request,
+	res: Response,
+	duration: number,
+): string => {
+	const requestId = getRequestId(res);
+	return `[${requestId}] ${req.method} ${req.path} ${res.statusCode} ${duration}ms`;
+};

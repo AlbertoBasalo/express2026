@@ -5,9 +5,9 @@ export interface Logger {
 
 export const consoleLogger: Logger = {
 	info: (message: string): void => {
-		console.log(message);
+		console.log("[INFO] ", message);
 	},
 	error: (message: string, error?: unknown): void => {
-		console.error(message, error);
+		console.error("[ERR!] ", message, error);
 	},
 };

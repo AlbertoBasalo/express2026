@@ -14,5 +14,3 @@ export type ApiErrorResponse = {
 	error: string;
 	message: string;
 };
-
-export const NO_REQUEST_ID = "no-request-id" as const;
