@@ -114,10 +114,10 @@ The software architecture follows a layered modular style per route domain with 
 - **Consequences**: Navigation is straightforward and each route remains self-contained; scaling to many routes may eventually require a centralized composition mechanism.
 
 ### ADR 3: Error and validation strategy without third-party schema libraries
-- **Decision**: Perform request validation through custom OOP validator classes and middleware; standardize domain errors via `AppError`, centralized error middleware, and a shared `ApiErrorResponse` contract for error payload shape.
+- **Decision**: Perform request validation through custom OOP validator classes returning `Result` types (with `Ok` and `Err` variants) to avoid `null` returns. Standardize domain errors via `AppError`, centralized error middleware, and a shared `ApiErrorResponse` contract for error payload shape.
 - **Status**: Accepted
-- **Context**: The baseline aims to minimize dependencies and keep transport concerns at the HTTP edge.
-- **Consequences**: Low dependency footprint and explicit behavior with a single reusable error-response shape; complex schemas may become verbose and could motivate introducing a schema library later.
+- **Context**: The baseline aims to minimize dependencies, keep transport concerns at the HTTP edge, and avoid null-checks by using explicit Result objects. Positive conditionals (avoiding negative ones like `!isOk`) should be preferred.
+- **Consequences**: Low dependency footprint and explicit behavior with a single reusable error-response shape; complex schemas may become verbose and could motivate introducing a schema library later. `Result` types provide type-safe error handling.
 
 ### ADR 4: File-based content source for bootstrap simplicity
 - **Decision**: Use filesystem JSON files in `data/` as the repository data source (`readJsonFile`).
