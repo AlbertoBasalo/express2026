@@ -7,10 +7,11 @@ test.describe("Route handling", () => {
 
 		// Act
 		const response = await page.goto(invalidRoute);
-		expect(response).not.toBeNull();
 
 		// Assert
+		expect(response).not.toBeNull();
 		expect(response?.status()).toBe(404);
-		await expect(page.locator("body")).toContainText(`Route: ${invalidRoute}`);
+		const body = page.locator("body");
+		await expect(body).toContainText(`Route: ${invalidRoute}`);
 	});
 });

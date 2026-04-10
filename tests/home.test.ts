@@ -18,10 +18,11 @@ test.describe("Home route", () => {
 
 		// Act
 		const response = await page.goto("/?lang=en");
-		expect(response).not.toBeNull();
 
 		// Assert
+		expect(response).not.toBeNull();
 		expect(response?.status()).toBe(400);
-		await expect(page.locator("body")).toContainText(expectedError);
+		const body = page.locator("body");
+		await expect(body).toContainText(expectedError);
 	});
 });
