@@ -4,9 +4,7 @@ import {
 	type Response,
 	Router,
 } from "express";
-import { createValidator } from "./middleware/validate.middleware.js";
-import { HomeController } from "./routes/home/home.controller.js";
-import { HomeValidator } from "./routes/home/home.validation.js";
+import { HomeRouter } from "./routes/home/home.router.js";
 import { NotFoundError } from "./shared/error.class.js";
 import { HTTP_CODES } from "./shared/rest.consts.js";
 
@@ -17,13 +15,8 @@ export const createApiRouter = (): Router => {
 		res.status(HTTP_CODES.NO_CONTENT).end();
 	apiRouter.get("/favicon.ico", noContent);
 
-	const homeController = new HomeController();
-	const homeValidator = new HomeValidator();
-	apiRouter.get(
-		`/`,
-		createValidator(homeValidator.validateGetHome),
-		homeController.getHome,
-	);
+	const homeRouter = new HomeRouter();
+	apiRouter.use("/", homeRouter.router);
 
 	const notFound = (req: Request, _res: Response, next: NextFunction) =>
 		next(new NotFoundError(`Route: ${req.path}`));
