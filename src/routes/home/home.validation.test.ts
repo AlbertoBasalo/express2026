@@ -1,7 +1,7 @@
 import type { Request } from "express";
 import { describe, expect, it } from "vitest";
 import { err, ok } from "../../shared/result.type.js";
-import { HomeValidator } from "./home.validation.js";
+import { HomeValidator } from "./home.validator.js";
 
 describe("HomeValidator", () => {
 	const validator = new HomeValidator();

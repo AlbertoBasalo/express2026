@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { createValidator } from "../../middleware/validate.middleware.js";
 import { HomeController } from "./home.controller.js";
-import { HomeValidator } from "./home.validation.js";
+import { HomeValidator } from "./home.validator.js";
 
 export class HomeRouter {
-	public router = Router();
+	readonly router = Router();
 
 	constructor(
 		private readonly controller = new HomeController(),
