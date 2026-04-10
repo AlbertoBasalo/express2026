@@ -18,9 +18,9 @@ Deliver endpoint changes that stay aligned with the current architecture in `pro
 
 For each route domain, keep these files and responsibilities explicit:
 
-- `*.routes.ts`
-  - Defines Express paths/methods and attaches middleware.
-  - Wires `validate(...)` before controller handlers.
+- `*.router.ts` (replaces direct `*.routes.ts` wiring at the domain level)
+  - Defines Express paths/methods and attaches middleware as part of an OOP Router class.
+  - Wires `validate(...)` before controller handlers inside its initialization method.
 - `*.validation.ts`
   - Validates request shape and returns a `Result` type (`Ok` or `Err`) rather than `null`.
   - Implemented as OOP classes (e.g., `SampleValidator`) with arrow function properties to preserve `this` context when used in middleware.
@@ -37,7 +37,7 @@ For each route domain, keep these files and responsibilities explicit:
 
 ## Implementation Rules
 
-- Must preserve dependency direction: `routes -> validation/controller -> service -> repository`.
+- Must preserve dependency direction: `router -> validation/controller -> service -> repository`.
 - Must keep local class-based Object-Oriented wiring in the route module via constructor dependency injection (avoid global container changes unless explicitly requested).
 - Must use shared HTTP constants/contracts when returning status/error payloads.
 - Must use `AppError`-compatible behavior for expected failures so middleware can produce standard error responses.
@@ -46,7 +46,7 @@ For each route domain, keep these files and responsibilities explicit:
 
 ## Adding a New Endpoint
 
-1. Update the relevant `*.routes.ts` with method/path and middleware chain.
+1. Update or create the relevant `*.router.ts` class with method/path and middleware chain. If it's a new domain, register the router class in `api.routes.ts`.
 2. Add/update validation in `*.validation.ts` for request params/query/body.
 3. Add/update controller handler in `*.controller.ts`.
 4. Add/update service method in `*.service.ts`.

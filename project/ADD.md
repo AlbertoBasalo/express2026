@@ -79,6 +79,7 @@ The software architecture follows a layered modular style per route domain with 
 
 - **Composition boundary**: `src/app.factory.ts` builds middleware and router graph; `src/server.ts` only starts listening.
 - **Route module structure**:
+  - `sample.router.ts` encapsulates the route definition, middleware, and dependency wiring for a specific domain.
   - `sample.controller.ts` handles HTTP contract and response codes.
   - `sample.service.ts` contains business logic (message assembly with timestamp).
   - `sample.repository.ts` isolates data access.
@@ -108,10 +109,10 @@ The software architecture follows a layered modular style per route domain with 
 - **Consequences**: App composition is import-safe for tests and future hosting variants; startup behavior remains explicit and isolated.
 
 ### ADR 2: Layered route architecture with local OOP class wiring
-- **Decision**: Use `controller -> service -> repository` OOP classes per route module, with local constructor defaults instead of a global composition root.
+- **Decision**: Use `router -> controller -> service -> repository` OOP classes per route module, with local constructor defaults instead of a global composition root. The router class encapsulates the route definitions.
 - **Status**: Accepted
-- **Context**: The project optimizes for workshop readability and low ceremony while preserving dependency direction.
-- **Consequences**: Navigation is straightforward and each route remains self-contained; scaling to many routes may eventually require a centralized composition mechanism.
+- **Context**: The project optimizes for workshop readability and low ceremony while preserving dependency direction and keeping the main router file clean.
+- **Consequences**: Navigation is straightforward, each route domain is fully self-contained; scaling to many routes may eventually require a centralized composition mechanism.
 
 ### ADR 3: Error and validation strategy without third-party schema libraries
 - **Decision**: Perform request validation through custom OOP validator classes returning `Result` types (with `Ok` and `Err` variants) to avoid `null` returns. Standardize domain errors via `AppError`, centralized error middleware, and a shared `ApiErrorResponse` contract for error payload shape.
