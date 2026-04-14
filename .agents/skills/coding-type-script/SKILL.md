@@ -4,6 +4,9 @@ description: "Best practices for clean and maintainable code in TypeScript. To b
 ---
 # TypeScript Coding Skill
 
+- Configuration: Type script is configured with strict typing and ES module syntax at `tsconfig.json`.
+- Lint: all code must be linted with `npm run lint` before committing.
+
 ## Clean code principles
 
 ### Variables and naming
@@ -30,6 +33,7 @@ description: "Best practices for clean and maintainable code in TypeScript. To b
 
 ## TypeScript specific guidelines
 
+- TypeScript file naming conventions: `<domain>.<technology>.ts`
 - Must use ES modules (`import`/`export`) instead of CommonJS.
 - Should favor named exports over default exports.
 - Must use file names in `kebab-case.{pattern}.ts` format. Example: `user-login.service.ts`.

@@ -52,55 +52,39 @@ npm start
 ```text
 .                         # Project root
 ├── AGENTS.md             # Agent instructions for this repository
+├── .agents/              # Agents skills and prompts
+│   └── skills/           # Agent skills for specific tasks
+├── project/              # Project-specific documentation
+│   ├── ADD.md            # Architecture Design Document
+│   ├── PRD.md            # Product Requirements Document
+│   └── specs/            # Project specifications
 ├── README.md             # Project overview
 ├── package.json          # Scripts and dependencies
-├── tsconfig.json         # TypeScript compiler config
-├── playwright.config.ts  # E2E test configuration
-├── .agents/              # Agents skills and prompts
-├── data/                 # Runtime JSON data source(s)
-│   └── home.content.json
-├── dist/                 # Compiled output
-├── project/              # Project-specific documentation
-│   └── ADD.md            # Architecture Design Document
 ├── src/                  # Application source
-│   ├── server.ts
-│   ├── app.factory.ts
-│   ├── api.routes.ts
-│   ├── env.config.ts
+│   ├── server.ts			    # Main server entry point
 │   ├── middleware/       # Middleware for the main server
 │   ├── routes/           # Routes for the main server
 │   └── shared/           # Shared utilities for server and routes
-└── tests/                # Playwright e2e tests
+├── tests/                # Playwright e2e tests
+├── data/                 # Runtime JSON data source(s)
+└── dist/                 # Compiled output
 ```
 
 ## Environment
 - **OS dev**: `Windows`
-- **Terminal**: `PowerShell`
+- **Terminal**: `PowerShell` or `Git Bash`
 - **Default branch**: `main`
 - **Git remote**: `https://github.com/AlbertoBasalo/express2026.git`
 
-## Behavior Guidelines
+### Behavior Guidelines
 
 - Code and documentation must be in English.
 - Chat responses must be in the language of the user prompt.
 - Sacrifice grammar for conciseness when needed to fit response limits.
-- When using templates, replace placeholders with concrete, repository-derived values.
+- When using templates, replace {placeholders} with concrete values.
 - Always lint with `npm run lint` before staging and committing changes.
 
 ### Naming Conventions
 
-- TypeScript file naming conventions: `<domain>.<technology>.ts`
-- Tests file naming conventions: `<file_or_spec-slug>.test.ts`
+Use slugs with hyphens for any identifiers: `add-task`, `fix-bug`, `update-deps`.
 
-Use slugs with hyphens for any identifiers or non code file names.
-
-Prefix commit messages with the following tags:
-
-- `chore:` : For routine tasks, maintenance, or non-functional changes.
-- `docs:` : For documentation changes.
-- `feat:` : For new features or significant changes.
-- `fix:` : For bug fixes or minor improvements.
-- `refactor:` : For code refactoring or improvements.
-- `test:` : For adding or updating tests.
-
-For specifications and branches use only `chore_`,`feat_` or `fix_` as prefixes.

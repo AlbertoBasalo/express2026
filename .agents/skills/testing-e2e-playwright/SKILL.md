@@ -2,9 +2,14 @@
 name: testing-e2e-playwright
 description: "Writes end-to-end tests with Playwright. To be used for verifying acceptance criteria through automated tests."
 ---
+
 # Playwright Testing Skill
 
 Use this skill to validate end-to-end behavior and acceptance criteria through HTTP/UI flows.
+
+- Tests file naming conventions: `<file-or-spec-slug>.test.ts`
+
+- Configuration: Playwright is configured to run against the development server with `webServer` in `playwright.config.ts`. It will automatically start the server before tests and stop it afterward.
 
 ## Scope
 
@@ -17,6 +22,7 @@ Use this skill to validate end-to-end behavior and acceptance criteria through H
 - **Must** place test files in `tests/`.
 - **Must** use `.test.ts` suffix.
 - **Must** keep unit tests separate in `src/` as colocated `*.test.ts` files.
+
 
 ## Test Structure
 

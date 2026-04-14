@@ -7,6 +7,10 @@ description: "Writes and maintains unit tests using Vitest. To be used for testi
 
 Use this skill to write and maintain unit tests for logic implemented in `src/` (services, controllers, validators, and utilities).
 
+- Tests file naming conventions: `<file-or-spec-slug>.test.ts`
+
+- Configuration: Unit tests are colocated with source files and run with `vitest` using the `npm run test:unit` script. Use `npm run test:dev` for watch mode during test development.
+
 ## Scope
 
 - **Must** add unit tests for changed services/controllers/utilities with behavior changes.
@@ -38,10 +42,10 @@ describe('MyService', () => {
     it('should do something specific', () => {
       // Arrange: Set up test data
       const input = { /* ... */ };
-      
+
       // Act: Execute the code under test
       const result = service.method(input);
-      
+
       // Assert: Verify the outcome
       expect(result).toBe(expected);
     });
