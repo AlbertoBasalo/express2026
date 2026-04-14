@@ -2,9 +2,14 @@
 	"name": "express2026",
 	"version": "1.0.0",
 	"description": "Boilerplate for a TypeScript backend with Express",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/AlbertoBasalo/express2026.git"
+	},
 	"author": {
 		"name": "Alberto Basalo",
-		"email": "albertobasalo@aicode.academy"
+		"email": "albertobasalo@aicode.academy",
+		"url": "https://albertobasalo.dev"
 	},
 	"main": "index.js",
 	"scripts": {
@@ -24,7 +29,7 @@
 		"express": "^5.2.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.10",
+		"@biomejs/biome": "^2.4.10",
 		"@playwright/test": "^1.59.1",
 		"@types/express": "^5.0.6",
 		"@types/node": "^25.5.2",

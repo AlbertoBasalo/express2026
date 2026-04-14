@@ -1,6 +1,6 @@
 # Express2026 Boilerplate
 
-[Repository GitHub Alberto Basalo Labs Express2026](https://github.com/AlbertoBasaloLabs/express2026)
+[Repository GitHub Alberto Basalo Express2026](https://github.com/AlbertoBasalo/express2026)
 
 ## Boilerplate
 

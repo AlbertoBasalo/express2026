@@ -77,7 +77,7 @@ npm start
 - **OS dev**: `Windows`
 - **Terminal**: `PowerShell`
 - **Default branch**: `main`
-- **Git remote**: Not configured yet (no remote returned by `git remote -v`)
+- **Git remote**: `https://github.com/AlbertoBasalo/express2026.git`
 
 ## Behavior Guidelines
 
