@@ -1,17 +1,37 @@
-# Agents Instructions
+# Instructions
+
+## Product
+
+**Node Express 2026** is a TypeScript Express 5 boilerplate for building REST APIs with a layered structure per route.
+
+## Environment
+
+### Configuration
 
 - **Root_Folder**: `/`
 - **Agents_Folder**: `/.agents`
 - **Agents_file**: `/AGENTS.md`
 - **Project_Folder**: `/project`
+- **OS dev**: `Windows`
+- **Terminal**: `PowerShell` or `Git Bash`
+- **Default branch**: `main`
+- **Git remote**: `https://github.com/AlbertoBasalo/express2026.git`
 
-## Product Overview
+### Behavior
 
-**Node Express 2026** is a TypeScript Express 5 boilerplate for building REST APIs with a layered structure per route.
+- Code and documentation must be in English.
+- Chat responses must be in the language of the user prompt.
+- Sacrifice grammar for conciseness when needed to fit response limits.
+- When using templates, replace {placeholders} with concrete values.
+- Always lint with `npm run lint` before staging and committing changes.
 
-## Technical Implementation
+### Conventions
 
-### Tech Stack
+Use slugs with hyphens for any identifiers: `add-task`, `fix-bug`, `update-deps`.
+
+## Technology
+
+### Stack
 
 - **Language**: `TypeScript 6` targeting ES2022 with strict compiler options
 - **Framework**: `Express 5` on `Node.js ESM`
@@ -20,7 +40,7 @@
 - **Testing**: `Vitest 4` for unit tests, `Playwright 1.5` for e2e
 - **Logging**: Custom request logger middleware + `console` output
 
-### Development workflow
+### Workflow
 
 ```bash
 # Set up the project
@@ -48,43 +68,22 @@ npm run build
 npm start
 ```
 
-### Folder structure
+### TreeView
+
 ```text
 .                         # Project root
-├── AGENTS.md             # Agent instructions for this repository
+├── AGENTS.md             # This file contains instructions for agents
+├── README.md             # Project overview
 ├── .agents/              # Agents skills and prompts
 │   └── skills/           # Agent skills for specific tasks
 ├── project/              # Project-specific documentation
 │   ├── ADD.md            # Architecture Design Document
 │   ├── PRD.md            # Product Requirements Document
 │   └── specs/            # Project specifications
-├── README.md             # Project overview
-├── package.json          # Scripts and dependencies
 ├── src/                  # Application source
-│   ├── server.ts			    # Main server entry point
-│   ├── middleware/       # Middleware for the main server
-│   ├── routes/           # Routes for the main server
-│   └── shared/           # Shared utilities for server and routes
 ├── tests/                # Playwright e2e tests
 ├── data/                 # Runtime JSON data source(s)
 └── dist/                 # Compiled output
 ```
 
-## Environment
-- **OS dev**: `Windows`
-- **Terminal**: `PowerShell` or `Git Bash`
-- **Default branch**: `main`
-- **Git remote**: `https://github.com/AlbertoBasalo/express2026.git`
-
-### Behavior Guidelines
-
-- Code and documentation must be in English.
-- Chat responses must be in the language of the user prompt.
-- Sacrifice grammar for conciseness when needed to fit response limits.
-- When using templates, replace {placeholders} with concrete values.
-- Always lint with `npm run lint` before staging and committing changes.
-
-### Naming Conventions
-
-Use slugs with hyphens for any identifiers: `add-task`, `fix-bug`, `update-deps`.
 

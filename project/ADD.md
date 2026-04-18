@@ -101,6 +101,30 @@ The software architecture follows a layered modular style per route domain with 
   - **Middleware chain** for transport concerns.
   - **Explicit `this` binding at route registration time** (`controller.method.bind(controller)`) to keep controller methods in classic OOP style without arrow properties.
 
+### Files and folders organization:
+
+```text
+├── package.json          				# Node Scripts and dependencies
+├── tsconfig.json          				# TypeScript configuration
+├── playwright.config.json 				# Playwright configuration
+├── src/                  				# Application source
+│   ├── server.ts			    				# Main server entry point
+│   ├── middleware/       				# Middleware for the main server
+│   ├── routes/           				# Routes for the main server
+│   │		└── home/         				# Example route module
+│   │		   ├── home.router.ts			# Route definitions for home endpoints
+│   │		   ├── home.controller.ts	# Controller for handling HTTP requests
+│   │		   ├── home.service.ts		# Service for business logic
+│   │		   └── home.repository.ts	# Repository for data access
+│   └── shared/           				# Shared utilities for server and routes
+├── tests/                				# Playwright e2e tests
+│   ├── routes.test.ts		 				# e2e tests for any route
+│   └── home.test.ts							# e2e tests for home route
+├── data/                 				# Runtime JSON data source(s)
+└── dist/                 				# Compiled output
+```
+
+
 ## Architecture Decisions Record (ADR)
 
 ### ADR 1: Runtime bootstrap and app composition separation
