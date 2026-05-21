@@ -3,35 +3,35 @@
 ### Behavior
 - Replace `{placeholders}` when using templates.
 - `{slug}`: a short (≤20 chars), unique identifier for an artifact.
-- Chat: user language. Code/docs: `English`.
+- Chat: user language. Code/docs: `{Business_Domain_Language}` (`English` | `Spanish` | …).
 - Concise; closed questions one at a time when unclear.
 
 ### Environment
-- **`.agents/`** — Agent skills, prompts, and workflow tooling.
-- **`project/`** — Product specs, plans, architecture docs, and reports.
-- **`src/`** — Application source (see **Technology**).
-- **OS** `Windows`
-- **Shell** `PowerShell` | `bash`
-- **Git** `https://github.com/AlbertoBasalo/express2026.git`
-- **Git Branch** default `main`
+- **{Agents_Folder}** — {Folder for agent-related files such as skills, prompts, and specs.}
+- **{Product_Folder}** — {Folder for product-related files such as specs, plans, and documentation.}
+- **{Source_Folders}** — {Comma-separated source roots, e.g. `back/`, `front/` — see **Technology**.}
+- **OS** `Windows` | `Linux` | `MacOS` 
+- **Shell** `cmd` | `PowerShell` | `bash` | `zsh`
+- **Git** {Remote URL for the git repository, e.g., `https://github.com/user/repo.git`}
+- **Git Branch** default `main` | `master`
 
 **Layout:**
 ```txt
-express2026/
+{Project_Root}
 ├── `AGENTS.md`
-├── `.agents/`
+├── `{Agents_Folder}/
 │   ├── `skills/`
 │   ├── `prompts/`
 │   └── `agents/`
-├── `project/`
+├── `{Product_Folder}/
 │   ├── `specs/`
 │   ├── `plans/`
 │   ├── `arch/`
 │   ├── `rules/`
 │   ├── `design/`
 │   └── `reports/`
-├── `src/`
-├── `tests/`
+├── `{Source_Folders}`
+├── `e2e/`
 ├── `README.md`
 ├── `CHANGELOG.md`
 ```
@@ -42,7 +42,7 @@ express2026/
 - Commit at the end of any skill execution.
 
 ### AIDD product artifacts
-Under `project/`:
+Under `{Product_Folder}/`:
 
 | Artifact | Path |
 |---|---|
@@ -56,7 +56,7 @@ Under `project/`:
 
 ### Implementation context (brownfield)
 
-When `project/arch/` or `rules/` exist (from `/explore` and `/extract`), `/planify`, `/codify`, and `/verify` read the files below in order. Skip missing files. Do not duplicate arch content into rules files.
+When `{Product_Folder}/arch/` or `rules/` exist (from `/explore` and `/extract`), `/planify`, `/codify`, and `/verify` read the files below in order. Skip missing files. Do not duplicate arch content into rules files.
 
 | # | File | Skills |
 |---|------|--------|
@@ -93,20 +93,20 @@ released-at:
 
 ## Technology
 
-TypeScript 6 on Node.js ESM with Express 5, Biome linting, Vitest unit tests, and Playwright E2E.
+{short description of the technology stack, e.g. "The technology stack is a combination of React, Node.js, and PostgreSQL."}
 
 | Tier | Folder | Language | Framework | Build | Run | Test |
 |------|--------|----------|-----------|-------|-----|------|
-| Back | `src/` | TypeScript 6 | Express 5 | `npm run build` | `npm run dev` / `npm run start` | `npm run test:unit` |
-| E2E | `tests/` | TypeScript 6 | Playwright | `—` | `—` | `npm run test:e2e` |
+| {Tier_Name_1} | `{folder_1}/` | {language_1} | {framework_1} | `{build_1}` | `{run_1}` | `{test_1}` |
+| {Tier_Name_2} | `{folder_2}/` | {language_2} | {framework_2} | `{build_2}` | `{run_2}` | `{test_2}` |
 
 ## Product
 
-**Express2026** is a TypeScript Express 5 boilerplate for building REST APIs with strict layering and minimal dependencies.
+{short description of the product, e.g. "The product is a web application that allows users to manage their tasks."}
 
-- Per-route layered modules: router, validation, controller, service, repository
-- Structured errors and validation without third-party schema libraries
-- JSON file storage under `data/`, sample `home` route, Vitest unit tests and Playwright E2E
+- {key feature 1}
+- {key feature 2}
+- {key feature 3}
 
 ## Principles
 1. **Think** — surface tradeoffs; don't assume or hide confusion.
@@ -114,4 +114,4 @@ TypeScript 6 on Node.js ESM with Express 5, Biome linting, Vitest unit tests, an
 3. **Surgical** — touch only what's needed; clean only your mess.
 4. **Goal-driven** — loop until success criteria are verified.
 
-> last updated: May 2026
+> last updated: {Date of last update, e.g., June 2027}
