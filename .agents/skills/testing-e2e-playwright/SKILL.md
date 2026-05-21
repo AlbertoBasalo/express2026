@@ -5,100 +5,48 @@ description: "Writes end-to-end tests with Playwright. To be used for verifying 
 
 # Playwright Testing Skill
 
-Use this skill to validate end-to-end behavior and acceptance criteria through HTTP/UI flows.
+## Role
+Act as a quality assurance engineer.
 
-- Tests file naming conventions: `<file-or-spec-slug>.test.ts`
+## Task
+Given a specification file, write and run E2E tests that cover all acceptance criteria and confirm the implementation is correct.
 
-- Configuration: Playwright is configured to run against the development server with `webServer` in `playwright.config.ts`. It will automatically start the server before tests and stop it afterward.
+## Context
 
-## Scope
+### Input
+- A specification file `{slug}.spec.md` with acceptance criteria.
 
-- **Must** validate user-visible behavior and acceptance criteria.
-- **Must** cover regressions for bug fixes that affect end-to-end flows.
-- **Should** focus on stable, high-value user journeys.
+### References
+- Load the guide for the E2E framework in use:
+  - Playwright → [Playwright guidelines](playwright.md)
+  - *(add further framework guides here as needed)*
 
-## File Naming and Location
+## Steps
 
-- **Must** place test files in `tests/`.
-- **Must** use `.test.ts` suffix.
-- **Must** keep unit tests separate in `src/` as colocated `*.test.ts` files.
+### Step 1: Clarify the input
+- [ ] If the spec or framework is unclear, ask the minimum questions needed before proceeding.
+- [ ] Verify presence of fixtures: `e2e/fixtures/{slug}.input.json` and `e2e/fixtures/{slug}.expected.json`.
+  - If missing, create reasonable default fixtures before writing tests so verification is repeatable.
 
+### Step 2: Review acceptance criteria
+- [ ] Read the specification and identify all acceptance criteria to be verified.
 
-## Test Structure
+### Step 3: Write E2E tests
+- [ ] Write tests covering all acceptance criteria, including edge cases.
+- [ ] Follow the Arrange-Act-Assert pattern where applicable.
+- [ ] Prioritize tests that run in isolation with no external dependencies.
+ - [ ] Use fixtures for test data and expected outputs: read inputs from `e2e/fixtures/{slug}.input.json` and assertions from `e2e/fixtures/{slug}.expected.json`.
 
-- **Should** use `describe` blocks to group related tests.
-- **Must** use `test` blocks for individual behaviors.
-- **Must** keep tests independent.
-- **Should** keep each suite focused on a single feature or flow.
+### Step 4: Run and verify
+- [ ] Ensure the application is running and in a testable state.
+- [ ] Execute all E2E tests and verify they pass.
+- [ ] If any tests fail, identify the root cause and document the issues.
+- [ ] If failures persist, report and stop — do not force-pass.
+- [ ] Shut down any services started for testing.
 
-- **Should** follow Arrange-Act-Assert (AAA) for clarity:
-  - **Arrange**: Set up the initial state and context.
-  - **Act**: Perform the actions to be tested.
-  - **Assert**: Verify the expected outcomes.
+## Output
+- [ ] A passing E2E test suite covering all acceptance criteria.
 
-## Workflow
-
-### 1. Before writing tests
-- **Must** read the specification (if present) to understand acceptance criteria.
-- **Should** identify required environment/setup assumptions.
-
-### 2. Writing tests
-- **Must** create/modify test files in `tests/` using `*.test.ts` naming.
-- If a specification exists:
-  - **Must** test each acceptance criterion from the specification.
-  - **Should** follow the planned testing tasks from the issue body when available.
-- If no specification exists:
-  - **Should** derive test coverage from implemented behavior and expected user flows.
-
-### 3. After writing tests
-- **Must** run `npm run test:e2e`.
-- If tests fail:
-  - **Must** investigate and fix when possible.
-  - **Must** report unresolved failures with likely root cause.
-- **Should** rely on Playwright to manage server lifecycle when `webServer` is configured.
-- **Should** run `npm run lint` before creating a commit.
-- **May** create a commit only when explicitly requested by the user/workflow.
-
-### When to stop testing
-
-- **Must** stop when all targeted tests pass.
-- **Must** stop when repeated failures require deeper debugging and report blockers.
-
-## Commands
-
-- **Must use e2e run command**: `npm run test:e2e`.
-- **May run full suite**: `npm run test` (unit + e2e) for broader validation.
-
-## Best Practices
-
-- **Must** assert externally observable outcomes (status, body, rendered content).
-- **Should** avoid brittle selectors and timing assumptions.
-- **Should** keep tests deterministic and isolated from unrelated data.
-
-## Common Playwright Matchers
-
-```typescript
-expect(page.getByText('Hello, world!')).toBeVisible();
-expect(page.getByRole('button', { name: 'Click me' })).toBeEnabled();
-expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue('John Doe');
-expect(page.getByRole('checkbox', { name: 'Accept terms' })).toBeChecked();
-expect(page.getByRole('radio', { name: 'Option 2' })).toBeChecked();
-expect(page.getByRole('select', { name: 'Color' })).toHaveValue('blue');
-expect(page.getByRole('table', { name: 'Users' })).toBeVisible();
-```
-
-### Advanced Features
-For advanced features, see [Playwright documentation](https://playwright.dev/docs/writing-tests):
-- Page Object Pattern
-- Actionability checks
-- Asynchronous operations
-- Debugging tips
-- Parallel testing
-- CI/CD integration
-
-## Output Checklist
-
-- [ ] All test changes are made on the intended implementation branch.
-- [ ] Modified or new test code is in `tests/`.
-- [ ] All planned testing tasks are completed or blockers are reported.
-- [ ] Commit is created only when explicitly requested, and summarizes coverage/issues.
+## Verification
+- [ ] All tests pass.
+- [ ] Any failures are documented and reported for resolution.
