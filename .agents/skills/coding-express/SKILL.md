@@ -9,7 +9,7 @@ Use this skill when creating or changing any API endpoint in `src/routes/`.
 
 ## Goal
 
-Deliver endpoint changes that stay aligned with the current architecture in `project/ADD.md`:
+Deliver endpoint changes that stay aligned with `project/arch/back.arch.md` and `project/arch/ADR.md`:
 - Local route module wiring with `router -> controller -> service -> repository`.
 - Transport concerns at the edge (validation + controller), business logic in service.
 - Centralized error handling through `AppError` and error middleware.

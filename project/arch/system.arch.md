@@ -75,3 +75,23 @@ C4Container
 | API Consumer | REST API | HTTP/JSON | REST endpoints under the API router; success JSON bodies; `ApiErrorResponse` for failures |
 | E2E Test Suite | REST API | HTTP/JSON | Same HTTP contract as external consumers; assertions on status, headers, and body |
 | REST API | JSON Data Files | Filesystem | Repository reads JSON files from `data/`; content shape defined per route domain |
+
+## Architecture documentation
+
+Canonical architecture for agents and planning (`/planify`, `/codify`, `/verify`) lives in `project/arch/`:
+
+| Document | Scope |
+|----------|--------|
+| `system.arch.md` (this file) | System context, containers, communication |
+| `ADR.md` | Architecture decision records |
+| `ER.md` | Domain model (file-backed JSON) |
+| `back.arch.md` | Back tier: stack, layout, routes, contracts, constraints |
+
+## Project documentation
+
+| Path | Purpose |
+|------|---------|
+| `project/specs/` | Feature specifications |
+| `project/plans/` | Implementation plans |
+| `project/rules/` | Coding conventions (from `/extract`) |
+| `AGENTS.md` (repo root) | Agent workflow, technology table, artifact paths |
