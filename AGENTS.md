@@ -12,7 +12,7 @@
 - **`src/`** — Application source (see **Technology**).
 - **OS** `Windows`
 - **Shell** `PowerShell` | `bash`
-- **Git** `https://github.com/AlbertoBasalo/express2026.git`
+- **Git** `https://github.com/AlbertoBasalo/express-boilerplate.git`
 - **Git Branch** default `main`
 
 **Layout:**
